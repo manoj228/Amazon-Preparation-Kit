@@ -1,0 +1,39 @@
+Example 1:
+
+Input:
+LinkedList: 2->2->4->5
+Output: 2 4 5
+Explanation: In the given linked list 
+2 ->2 -> 4-> 5, only 2 occurs more 
+than 1 time.
+Example 2:
+
+Input:
+LinkedList: 2->2->2->2->2
+Output: 2
+Explanation: In the given linked list 
+2 ->2 ->2 ->2 ->2, 2 is the only element
+and is repeated 5 times.
+
+// Time complexity : O(N)
+// Space complexity : O(1)
+Node *removeDuplicates(Node *head)
+{
+   if(!head || !head -> next) return head;
+   
+   Node *cur = head, *temp = head->next;
+   
+   while(temp)
+   {
+       if(cur -> data != temp -> data)
+       {
+           cur -> next = temp;
+           cur = temp;
+       }
+           
+        temp = temp -> next;
+   }
+   cur -> next = NULL;
+   
+   return head;
+}
