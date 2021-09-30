@@ -1,0 +1,64 @@
+Examples: 
+
+                      20
+                    /    \
+                  8       22
+                /   \      \
+              5      3      25
+                    / \      
+                  10    14
+For the above tree the output should be 5, 10, 3, 14, 25.
+If there are multiple bottom-most nodes for a horizontal distance from root, then print the later one in level traversal. 
+For example, in the below diagram, 3 and 4 are both the bottom-most nodes at horizontal distance 0, we need to print 4. 
+
+                   
+                      20
+                    /    \
+                  8       22
+                /   \    /   \
+              5      3 4     25
+                    / \      
+                  10    14
+For the above tree the output should be 5, 10, 4, 14, 25. 
+
+
+
+
+// Time complexity  : O(n)
+// space complexity : O(n)
+class Solution {
+  public:
+    void findBottomViewNodes(Node *root, int distance, int level, map<int,pair<int,int>> &mp)
+    {
+        if(!root) return;
+        
+        if(level >= mp[distance].first)
+        {
+            mp[distance] = {level, root->data};
+        }
+        
+        // left recursion
+        findBottomViewNodes(root->left, distance-1, level+1, mp);
+        
+        // right recursion
+        findBottomViewNodes(root->right, distance+1, level+1, mp);
+        
+    } 
+  
+    vector <int> bottomView(Node *root) {
+        vector<int> res;
+        
+        // int - distance
+        // pair<int, int> - level, node -> data
+        map<int, pair<int,int>> mp;
+        
+        findBottomViewNodes(root, 0, 0, mp);
+        
+        for(auto it : mp)
+        {
+            res.push_back(it.second.second);
+        }
+        
+        return res;
+    }
+};
