@@ -21,9 +21,49 @@ For example, in the below diagram, 3 and 4 are both the bottom-most nodes at hor
                   10    14
 For the above tree the output should be 5, 10, 4, 14, 25. 
 
+1) Using BFS
 
+// Time complexity  : O(n)
+// space complexity : O(n)
+class Solution {
+  public:
+  
+    vector <int> bottomView(Node *root) {
+      vector<int> res;
+        
+        if(!root) return res;
+      
+        map<int, int> mp;
+        queue<pair<Node*, int>> q;
+        q.push({root, 0});
+        
+        while(!q.empty())
+        {
+            Node* cur = q.front().first;
+            int line = q.front().second;
+            q.pop();
+            
+            mp[line] = cur -> data;
+            
+            if(cur -> left)
+            q.push({cur->left, line-1});
+            
+            if(cur -> right)
+            q.push({cur -> right, line+1});
+            
+        }
+        
+        for(auto it : mp)
+        {
+            res.push_back(it.second);
+        }
+        
+        return res;
 
+    }
+};
 
+2) Using DFS
 // Time complexity  : O(n)
 // space complexity : O(n)
 class Solution {
