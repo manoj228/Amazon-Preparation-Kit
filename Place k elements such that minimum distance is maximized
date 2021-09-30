@@ -1,0 +1,75 @@
+Examples :  
+
+Input : arr[] = {1, 2, 8, 4, 9}
+            k = 3
+Output : 3
+Largest minimum distance = 3
+3 elements arranged at positions 1, 4 and 8, 
+Resulting in a minimum distance of 3
+
+Input  : arr[] = {1, 2, 7, 5, 11, 12}
+             k = 3
+Output : 5
+Largest minimum distance = 5
+3 elements arranged at positions 1, 7 and 12, 
+resulting in a minimum distance of 5 (between
+7 and 12)
+
+
+
+// Time complexity : O(nlogn)
+// space complexity : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+bool canPlace(vector<int> arr, int n, int k, int range)
+{
+	int cur = arr[0], curCount = 1;
+	for(int i=1; i<n; i++)
+	{
+		if(arr[i] - cur >= range)
+		{
+			cur = arr[i];
+			
+			curCount++;
+			
+			if(curCount == k) return true;
+		}
+	}
+	
+	return false;
+}
+
+int findMinMaxDistance(vector<int> arr, int k)
+{
+	int n = arr.size();
+	int left = 1, right = arr[n-1], res = 0;
+	
+	while(left < right)
+	{
+		int mid = (left + right) >> 1;
+		
+		if(canPlace(arr, n, k, mid))
+		{
+			left = mid + 1;
+			res = mid;
+		}
+		else{
+			right = mid;
+		}
+		
+	}
+	
+	return res;
+}
+
+int main() {
+	// your code goes here
+	vector<int> arr{1, 2, 7, 5, 11, 12};
+	int k = 3;
+	
+	cout << findMinMaxDistance(arr, k);
+	
+	return 0;
+}
