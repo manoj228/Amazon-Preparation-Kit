@@ -1,0 +1,67 @@
+
+Example 1:
+
+Input:
+Stack: 18 19 29 15 16
+Output: 15
+Explanation:
+The minimum element of the stack is 15.
+
+
+// Time complexity : O(1)
+// space complexity : O(1)
+int mini = 9999, pre = -1, conv = 0; 
+void push(stack<int>& s, int a){
+    // if stack empty, cur element is the min element
+    if(s.empty()) mini = a;
+    
+    // else check if a is minimum or not
+    else if(a < mini){
+        // convert the minimum into another form, so we can track of minimum
+        /* for eg : 4 3
+           here, conv = (2*4) + 3 = 11,mini = 3, prev = 4
+        */
+        conv = (2*mini)+a;
+        pre = mini;
+        mini = a;
+    }
+    
+     s.push(a);
+    
+}
+
+bool isFull(stack<int>& s,int n){
+    return (s.size() == n);
+}
+
+bool isEmpty(stack<int>& s){
+    return (s.empty());
+}
+
+int pop(stack<int>& s){
+    // if stack empty, return -1
+    if(s.empty()) return -1;
+    
+    // get top element from stack, val = 3
+	int val = s.top(); s.pop();
+	
+	// Then, it is equal to mini, so we need to go back
+	if(val == mini)
+	{
+	    // first assign previous to mini
+	    mini = pre;
+	    // next update converted value
+	    /* Now in stack, 4,3
+	    conv = (11 - 3)/2 = 4, mini = 3, prev = 4
+	    */
+	    conv = (conv - val)/2;
+	    pre = conv;
+	}
+	
+	return val;
+}
+
+int getMin(stack<int>& s){
+	
+	return mini;
+}
