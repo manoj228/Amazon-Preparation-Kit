@@ -1,0 +1,105 @@
+Example 1:
+
+Input:
+      1
+   /    \
+  2      3
+Output: 2 1 3
+Example 2:
+
+Input:
+       10
+    /      \
+  20        30
+ /   \    /    \
+40   60  90    100
+Output: 40 20 10 30 100
+
+1) Using BFS
+
+// Time complexity : O(n)
+// Space complexity : O(n)
+class Solution
+{
+    public:
+    vector<int> topView(Node *root)
+    {
+        vector<int> res;
+        
+        if(!root) return res;
+      
+        map<int, int> mp;
+        queue<pair<Node*, int>> q;
+        q.push({root, 0});
+        
+        while(!q.empty())
+        {
+            Node* cur = q.front().first;
+            int line = q.front().second;
+            q.pop();
+            
+            if(mp.find(line) == mp.end()) mp[line] = cur -> data;
+            
+            if(cur -> left)
+            q.push({cur->left, line-1});
+            
+            if(cur -> right)
+            q.push({cur -> right, line+1});
+            
+        }
+        
+        for(auto it : mp)
+        {
+            res.push_back(it.second);
+        }
+        
+        return res;
+    }
+
+};
+
+
+2) Using DFS
+
+// Time complexity : O(n)
+// Space complexity : O(n)
+class Solution
+{
+    public:
+    void findTopViewNodes(Node *root, int distance, int level, map<int, pair<int,int>> &mp)
+    {
+        if(!root) return;
+        
+        if(mp.find(distance) == mp.end() || mp[distance].first > level)
+        {
+            mp[distance] = {level, root->data};
+        }
+        
+        // left recursion
+        findTopViewNodes(root->left, distance-1, level+1, mp);
+        
+        // right recursion
+        findTopViewNodes(root->right, distance+1, level+1, mp);
+        
+    }
+    
+   
+    vector<int> topView(Node *root)
+    {
+        vector<int> res;
+        
+        // int - distance
+        // pair<int,int> - level, node -> data
+        map<int, pair<int,int>> mp;
+        
+        findTopViewNodes(root, 0, 0, mp);
+        
+        for(auto it : mp)
+        {
+            res.push_back(it.second.second);
+        }
+        
+        return res;
+    }
+
+};
