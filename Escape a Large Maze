@@ -1,0 +1,83 @@
+We start at the source = [sx, sy] square and want to reach the target = [tx, ty] square. 
+There is also an array of blocked squares, where each blocked[i] = [xi, yi] represents a blocked square with coordinates (xi, yi).
+
+Each move, we can walk one square north, east, south, or west if the square is not in the array of blocked squares.
+We are also not allowed to walk outside of the grid.
+
+Return true if and only if it is possible to reach the target square from the source square through a sequence of valid moves.
+
+ 
+
+Example 1:
+
+Input: blocked = [[0,1],[1,0]], source = [0,0], target = [0,2]
+Output: false
+Explanation: The target square is inaccessible starting from the source square because we cannot move.
+We cannot move north or east because those squares are blocked.
+We cannot move south or west because we cannot go outside of the grid.
+Example 2:
+
+Input: blocked = [], source = [0,0], target = [999999,999999]
+Output: true
+Explanation: Because there are no blocked cells, it is possible to reach the target square.
+
+
+
+/*Time complexity depends on the size of blocked
+The maximum area blocked are B * (B - 1) / 2.
+As a result, time and space complexity are both O(B^2)
+Here, we used a fixed upper bound 20000*/
+
+class Solution {
+public:    
+     vector<int> dx{1, -1, 0,  0};
+     vector<int> dy{0,  0, 1, -1};
+     int limit = 1e6;
+    unordered_set<string> blocks;
+    bool bfs(vector<int> source, vector<int> target, unordered_set<string> blocks)
+    {
+        unordered_set<string> seen;
+        seen.insert(to_string(source[0]) + ":" + to_string(source[1]));
+        
+        queue<pair<int,int>> q;
+        q.push({source[0], source[1]});
+        while(!q.empty())
+        {
+            pair<int,int> p=q.front(); q.pop();
+            
+            for(int i=0; i<4; i++)
+            {
+                int nx = p.first + dx[i], ny = p.second + dy[i];
+                
+                if(nx < 0 || ny < 0 || nx >= limit || ny >= limit) continue;
+                                
+                string cur = to_string(nx) + ":" + to_string(ny);
+               
+                if(seen.find(cur) != seen.end() || blocks.find(cur) != blocks.end())
+                continue;
+                
+                if(nx == target[0] && ny == target[1]) return true;
+                
+                q.push({nx, ny});
+                seen.insert(cur);
+            }
+            /* The sum of the area available equals 1+2+3+4+5+...+198+199=(1+199)*199/2=19900 (trapezoid sum) */
+            if(seen.size() == 20000) return true;
+        }
+        
+        return false;
+    }
+    
+    
+    bool isEscapePossible(vector<vector<int>>& blocked, vector<int>& source, vector<int>& target) {
+        
+        if(blocked.size() == 0) return true;
+    
+        for(auto b : blocked)
+            blocks.insert(to_string(b[0]) + ":" + to_string(b[1]));
+        
+        
+        return bfs(source, target, blocks) && bfs(target, source, blocks);
+    }
+    
+};
