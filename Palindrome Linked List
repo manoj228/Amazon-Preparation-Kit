@@ -1,0 +1,51 @@
+Example 1:
+Input: head = [1,2,2,1]
+Output: true
+
+Example 2:
+Input: head = [1,2]
+Output: false
+
+// Time complexity : O(n)
+// space complexity : O(1)
+class Solution {
+public:
+    ListNode* reverse(ListNode *root)
+    {
+        ListNode *cur = root, *pre = NULL;
+        
+        while(cur)
+        {
+            ListNode *next = cur -> next;
+            cur -> next = pre;
+            pre = cur;
+            cur = next;
+        }
+        
+        return pre;
+    }
+    
+    bool isPalindrome(ListNode* head) {
+        
+        ListNode *slow = head, *fast = head;
+        
+        while(fast && fast -> next)
+        {
+            slow = slow -> next;
+            fast = fast -> next -> next;
+        }
+        
+        fast = head;
+        slow = reverse(slow);
+        
+        while(slow)
+        {
+            if(slow->val != fast->val) return false;
+            
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        
+        return true;
+    }
+};
