@@ -1,0 +1,36 @@
+Example 1:
+
+Input:
+N = 11
+arr[] = {1, 1, 2, 2, 3, 3, 4, 50, 50, 65, 65}
+Output: 4
+Explanation: 4 is the only element that 
+appears exactly once.
+
+
+// Time complexity : O(logn)
+// Space complexity : O(1)
+
+class Solution
+{
+  public:
+    int findOnce(int arr[], int n)
+    {
+        int left = 0, right = n-1;
+        
+        while(left < right)
+        {
+            int mid = (left + right) >> 1;
+            
+            if((mid & 1 && arr[mid-1] == arr[mid]) || 
+               (mid % 2 == 0 && arr[mid+1] == arr[mid]))
+               left = mid+1;
+               
+            else
+            right = mid;
+        }
+        
+        
+        return arr[left];
+    }
+};
