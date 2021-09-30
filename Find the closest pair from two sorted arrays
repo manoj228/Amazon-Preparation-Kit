@@ -1,0 +1,57 @@
+Example: 
+
+Input:  ar1[] = {1, 4, 5, 7};
+        ar2[] = {10, 20, 30, 40};
+        x = 32      
+Output:  1 and 30
+
+Input:  ar1[] = {1, 4, 5, 7};
+        ar2[] = {10, 20, 30, 40};
+        x = 50      
+Output:  7 and 40
+
+
+
+
+// Time complexity : O(n)
+// space complexity : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void findPairs(vector<int> arr, vector<int> barr, int x)
+{
+	int m = arr.size(), n = barr.size();
+	
+	int left = 0, right = n-1, res = INT_MAX;
+	pair<int,int> p;
+	
+	while(left < m && right >= 0)
+	{
+		int sum = arr[left] + barr[right];
+		
+		if(abs(sum - x) <= res)
+		{
+			res = abs(sum-x);
+			p.first = arr[left], p.second = barr[right];
+		}
+		
+		if(sum < x)
+		left++;
+		
+		else
+		right--;
+	}
+	
+	cout << p.first << " " << p.second << endl;
+}
+
+int main() {
+	// your code goes here
+	vector<int> arr{1, 4, 5, 7}, barr{10, 20, 30, 40};
+	int x = 32;
+	
+	findPairs(arr, barr, x);
+	
+	return 0;
+}
