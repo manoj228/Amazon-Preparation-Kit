@@ -1,0 +1,84 @@
+Example 1:
+
+Input: grid = {{0,1,2},{0,1,2},{2,1,1}}
+Output: 1
+Explanation: The grid is-
+0 1 2
+0 1 2
+2 1 1
+Oranges at positions (0,2), (1,2), (2,0)
+will rot oranges at (0,1), (1,1), (2,2) and 
+(2,1) in unit time.
+Example 2:
+
+Input: grid = {{2,2,0,1}}
+Output: -1
+Explanation: The grid is-
+2 2 0 1
+Oranges at (0,0) and (0,1) can't rot orange at
+(0,3).
+
+
+
+// Time complexity : O(M * N)
+// space complexity : O(M)
+class Solution 
+{
+    public:
+    bool checkSafe(int x, int y, int r, int c)
+    {
+        return (x < 0 ||  x >= r|| y < 0 || y >= c);
+    }
+    
+    
+    int orangesRotting(vector<vector<int>>& grid) {
+       
+        int fresh = 0;
+        queue<pair<int,int>> q;
+        
+        for(int i=0; i<grid.size(); i++){
+            for(int j=0; j<grid[0].size(); j++)
+            {
+                if(grid[i][j] == 1) fresh++;
+                
+                if(grid[i][j] == 2)
+                q.push({i,j});
+            }
+        }
+        
+        int minTime = -1;
+        int dx[] = {1,-1, 0, 0};
+        int dy[] = {0, 0, 1, -1};
+        
+        while(!q.empty())
+        {
+            minTime++;
+            int n = q.size();
+            
+            while(n--)
+            {
+                int x = q.front().first, y = q.front().second;
+                q.pop();
+                
+                for(int i=0; i<4; i++)
+                {
+                    int nx = x + dx[i] , ny = y + dy[i];
+                    
+                    if(checkSafe(nx, ny, grid.size(), grid[0].size())) 
+                    continue;
+                    
+                    if(grid[nx][ny] == 1)
+                    {
+                        grid[nx][ny] = 2;
+                        --fresh;
+                        q.push({nx, ny});
+                    }
+                }
+            }
+        }
+        
+        if(fresh > 0) return -1;
+        
+        return minTime;
+    }
+};
