@@ -1,0 +1,41 @@
+Example 1:
+
+Input:
+        1
+      /   \
+     2     3
+    /
+   4
+Output: 3
+â€‹Explanation: There are 3 edges and 4
+nodes in spiral tree where leaf nodes
+4 and 3 are connected in circular
+doubly linked list form. Thus the
+height of spiral tree is 3.
+Example 2:
+
+Input:
+        1
+      /   \
+     2     3
+    / \
+   4   5
+  /
+ 6
+Output: 4
+
+
+
+// Time complexity : O(H)
+// Space complexity : O(H)
+int findTreeHeight(Node* root)
+{
+	if(!root) return 0;
+	
+	if(root->left && root->left->right == root) return 1;
+	
+	int l = findTreeHeight(root -> left);
+	int r = findTreeHeight(root -> right);
+	
+	return 1+max(l,r);
+}
