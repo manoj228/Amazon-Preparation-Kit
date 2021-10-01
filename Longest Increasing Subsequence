@@ -1,0 +1,107 @@
+Examples: 
+
+Input: arr[] = {3, 10, 2, 1, 20}
+Output: Length of LIS = 3
+The longest increasing subsequence is 3, 10, 20
+
+Input: arr[] = {3, 2}
+Output: Length of LIS = 1
+The longest increasing subsequences are {3} and {2}
+
+Input: arr[] = {50, 3, 10, 7, 40, 80}
+Output: Length of LIS = 4
+The longest increasing subsequence is {3, 7, 40, 80}
+
+
+1) DP Solution
+
+// Time complexity : O(n * n)
+// space complexity : O(n)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int longestSubsequence(int n, vector<int> a){
+       vector<int> seq(n, 1);
+       int maxLen = 1;
+       
+       for(int i=1; i<n; i++)
+       {
+           for(int j=0; j<i; j++)
+           {
+               if(a[j] < a[i])
+               {
+                   seq[i] = max(seq[i], seq[j]+1);
+                   maxLen = max(maxLen, seq[i]);
+               }
+           }
+       }
+       
+       
+    return maxLen;
+}
+
+int main() {
+	// your code goes here
+	vector<int> arr{50, 3, 10, 7, 40, 80};
+	
+   cout << longestSubsequence(arr.size(), arr);
+	return 0;
+}
+
+
+2) Optimal solution 
+
+// Time complexity : O(n log n)
+// space complexity : O(n)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int findPos(vector<int> arr, int len, int target)
+{
+	int l = 0, r = len-1;
+	
+	while(l < r)
+	{
+		int mid = (l+r) >> 1;
+		
+		if(arr[mid] < target)
+		l = mid+1;
+		
+		else
+		r = mid;
+	}
+	
+	return l;
+}
+
+int longestSubsequence(int n, vector<int> arr){
+   
+   vector<int> seq(n);
+   seq[0] = arr[0];
+   int len = 1;
+   
+   for(int i=1; i<n; i++)
+   {
+   	if(seq[len-1] < arr[i])
+   	{
+   		seq[len++] = arr[i];
+   	}
+   	else{
+   		// find position to place the cur element using binary search
+   		int index = findPos(arr, len, arr[i]);
+   		seq[index] = arr[i];
+   	}
+   }
+   
+   return len;
+}
+
+int main() {
+	// your code goes here
+	vector<int> arr {3, 10, 2, 1, 20};
+	
+   cout << longestSubsequence(arr.size(), arr);
+	return 0;
+}
