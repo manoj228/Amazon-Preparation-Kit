@@ -1,0 +1,84 @@
+Example:
+
+Input: 1 -> -2 -> -3 -> 4 -> -5
+Output: -5 -> -3 -> -2 -> 1 -> 4
+
+
+1) Merge Sort
+// Time complexity : O(nlogn)
+// space complexity : O(1)
+
+void splitTwoNodes(Node *root, Node **a, Node **b)
+{
+    Node *fast = head, *slow = head;
+    
+    while(fast && fast -> next)
+    {
+        fast = fast -> next;
+        slow = slow -> next;
+    }
+    
+    (*a) = head;
+    (*b) = slow -> next;
+    slow -> next = NULL;
+}
+
+Node* mergeList(Node *a, Node *b)
+{
+    if(!a) return b;
+    if(!b) return a;
+    
+    Node *res = NULL;
+    
+    if(a->data <= b->data)
+    {
+        res = a;
+        res -> next = mergeList(a->next, b);
+    }
+    else
+    {
+        res = b;
+        res -> next = mergeList(a, b->next);
+    }
+    
+    return res;
+}
+
+void sortList(Node** head)
+{
+    if(!(*head) || !(*head)->next) return;
+    
+    Node *first = NULL, *second = NULL;
+    
+    splitTwoNodes((*head), &first, &second);
+    
+    sortList(&first);
+    sortList(&second);
+    
+    (*head) = mergeList(first, second);
+    
+}
+
+2) Optimal approach
+// Time complexity : O(n)
+// space complexity : O(1)
+void sortList(Node** head)
+{
+    if(!(*head) || !(*head)->next) return;
+    
+    Node *temp = (*head), *cur = (*head)->next;
+    
+    while(cur)
+    {
+        if(temp -> data <= cur->data)
+        temp = cur;
+        else{
+            temp -> next = cur -> next;
+            cur -> next = (*head);
+            (*head) = cur;
+            cur = temp;
+        }
+        
+        cur = cur -> next;
+    }
+}
