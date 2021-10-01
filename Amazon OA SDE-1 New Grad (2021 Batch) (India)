@@ -1,0 +1,164 @@
+Given a List of Orders , where each Order is a string . For example : [aax 12 23 ] [ ff kindle ebook] are two orders. Each order has an ID which is first part of the order ( ID of order 1 = aax , ID2 = ff ). The remaining part of the order is referred to as MetaData. There are two types of orders, Prime orders ( which contain non numeric Meta Data) and Non-Prime Orders (which contain Only-Numeric Meta Data). Sort the List of Orders as given below :
+a. Prime Orders before NonPrime Orders
+b. Prime Order with lexicographically smaller MetaData comes first.
+c. In Case of tie in (b) , the one with lexicographically smaller ID comes first.
+d. The relative order of NonPrime Orders remains the same.
+
+
+1) First way
+// Time complexity : O(nlogn)
+// space complexity : O(n)
+
+// Time complexity : O(max(mlogm, nlogn))
+// space complexity : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int getIdIndex(string order)
+{
+	int n = order.size();
+	for(int i=0; i<n; i++)
+	{
+		if(order[i] == ' ')
+		return i;
+	}
+	
+	return -1;
+}
+
+bool isPrimeOrder(string meta)
+{
+	for(int i=0; i<meta.size(); i++)
+	{
+		if(meta[i] >= '0' && meta[i] <= '9') 
+		return false;
+	}
+	
+	return true;
+}
+
+int main() {
+	// your code goes here
+	
+    vector<string> orderedList{{"abc 12 23"},{"xff 43 29"},{"abe abcc"},{"abc abcc"}, {"abcd abcd"}};
+	
+	vector<pair<string, string>> primeOrderList, nonPrimeOrderList;
+	
+	// get the prime order and non-prime order lists
+	for(auto order : orderedList) 
+	{
+		int index = getIdIndex(order);
+		
+		string id = order.substr(0, index);
+		string metaData = order.substr(index+1);
+		
+		if(isPrimeOrder(metaData))
+		{
+			primeOrderList.push_back({metaData, id});
+		}
+		else{
+			nonPrimeOrderList.push_back({id, metaData});
+		}
+	} 
+	
+	sort(primeOrderList.begin(), primeOrderList.end());
+	
+	cout << "Prime Orders are : ";
+	for(auto order : primeOrderList) cout << order.second << " " << order.first << ", ";
+	cout << endl;
+	
+	cout << "Non-Prime Orders are : ";
+	for(auto order : nonPrimeOrderList) cout << order.first << " " << order.second << ", ";
+	cout << endl;
+	
+	return 0;
+}
+
+2) second way
+// Time complexity : O(nlogn)
+// space complexity : O(n)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int getIdIndex(string order)
+{
+	int n = order.size();
+	for(int i=0; i<n; i++)
+	{
+		if(order[i] == ' ')
+		return i;
+	}
+	
+	return -1;
+}
+
+bool isPrimeOrder(string meta)
+{
+	for(int i=0; i<meta.size(); i++)
+	{
+		if(meta[i] >= '0' && meta[i] <= '9') 
+		return false;
+	}
+	
+	return true;
+}
+
+bool cmp(pair<string,string> &s1, pair<string,string> &s2)
+{
+	string a = s1.second, b = s2.second;
+	
+	// compare based on lexicographical order
+	for(int i=0,j=0; i<a.size() && j<b.size(); i++,j++)
+	{
+		if(a[i] > b[j]) return false;
+	}
+	
+	// if it's a tie, then compare its id
+	
+	a = s1.first, b = s1.first;
+	for(int i=0,j=0; i<a.size() && j<b.size(); i++,j++)
+	{
+		if(a[i] > b[j]) return false;
+	}
+	
+	return true;
+}
+
+int main() {
+	// your code goes here
+	
+    vector<string> orderedList{{"abc 12 23"},{"xff 43 29"},{"abe abcc"},{"abc abcc"}, {"abcd abcd"}};
+	
+	vector<pair<string, string>> primeOrderList, nonPrimeOrderList;
+	
+	// get the prime order and non-prime order lists
+	for(auto order : orderedList) 
+	{
+		int index = getIdIndex(order);
+		
+		string id = order.substr(0, index);
+		string metaData = order.substr(index+1);
+		
+		if(isPrimeOrder(metaData))
+		{
+			primeOrderList.push_back({id, metaData});
+		}
+		else{
+			nonPrimeOrderList.push_back({id, metaData});
+		}
+	} 
+	
+	sort(primeOrderList.begin(), primeOrderList.end(), cmp);
+	
+	cout << "Prime Orders are : ";
+	for(auto order : primeOrderList) cout << order.first << " " << order.second << ", ";
+	cout << endl;
+	
+	cout << "Non-Prime Orders are : ";
+	for(auto order : nonPrimeOrderList) cout << order.first << " " << order.second << ", ";
+	cout << endl;
+	
+	return 0;
+}
