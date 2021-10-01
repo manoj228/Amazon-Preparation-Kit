@@ -1,0 +1,101 @@
+s represents ‘source’ 
+d represents ‘destination’ 
+* represents cell you can travel 
+0 represents cell you can not travel 
+This problem is meant for single source and destination.
+Examples: 
+ 
+
+Input : {'0', '*', '0', 's'},
+        {'*', '0', '*', '*'},
+        {'0', '*', '*', '*'},
+        {'d', '*', '*', '*'}
+Output : 6
+
+Input :  {'0', '*', '0', 's'},
+         {'*', '0', '*', '*'},
+         {'0', '*', '*', '*'},
+         {'d', '0', '0', '0'}
+Output :  
+
+
+
+
+// Time complexity : O(m  + n)
+// space complexity : O(m + n)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+bool checkSafe(int x, int y, int r, int c)
+{
+	return (x < 0 || y < 0 || x >= r || y >= c);
+}
+
+int findMinDist(vector<vector<char>> &grid)
+{
+	int sx = -1, sy = -1;
+	for(int i=0; i<grid.size(); i++)
+	{
+		for(int j=0; j<grid[0].size(); j++)
+		{
+			if(grid[i][j] == 's')
+			{
+				sx = i, sy = j;
+				break;
+			}
+		}
+	}
+	
+	queue<pair<int,int>> q;
+	vector<vector<bool>> vis(grid.size(), vector<bool>(grid[0].size(),false));
+	q.push({sx, sy});
+	vis[sx][sy] = true;
+	int distance = 0;
+	
+	int dx[] = {-1, 1, 0,  0};
+	int dy[] = { 0, 0, 1, -1};
+	
+	while(!q.empty())
+	{
+		int n = q.size();
+		while(n--)
+		{
+			pair<int,int> p=q.front(); q.pop();
+			
+			if(grid[p.first][p.second] == 'd') return distance;
+			
+			for(int i=0; i<4; i++)
+			{
+				int nx = p.first + dx[i] , ny = p.second + dy[i];
+				
+				if(checkSafe(nx, ny, grid.size(), grid[0].size()) || grid[nx][ny] == '0') continue;
+				
+				if(!vis[nx][ny])
+				{
+					vis[nx][ny] = true;
+					q.push({nx, ny});
+				}
+			}
+		}
+		
+		++distance;
+	}
+	
+	return -1;
+}
+
+
+int main() {
+	// your code goes here
+	
+    vector<vector<char>> grid { { '0', '*', '0', 's' },
+                                { '*', '0', '*', '*' },
+                                { '0', '*', '*', '*' },
+                                { 'd', '*', '*', '*' } };
+                                
+                                
+    cout << findMinDist(grid);
+	
+	return 0;
+}
