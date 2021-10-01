@@ -1,0 +1,59 @@
+Examples:  
+
+Input: arr[] = {1, 4, 20, 3, 10, 5}, sum = 33
+Output: Sum found between indexes 2 and 4
+Explanation: Sum of elements between indices
+2 and 4 is 20 + 3 + 10 = 33
+
+Input: arr[] = {10, 2, -2, -20, 10}, sum = -10
+Output: Sum found between indexes 0 to 3
+Explanation: Sum of elements between indices
+0 and 3 is 10 + 2 - 2 - 20 = -10
+
+Input: arr[] = {-10, 0, 2, -2, -20, 10}, sum = 20
+Output: No subarray with given sum exists
+Explanation: There is no subarray with the given sum
+
+
+
+
+// Time complexity : O(n)
+// space complexity : O(n)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void findSubarraySum(vector<int> arr, int sum)
+{
+	int curSum = 0, n = arr.size(), flag = 0;
+	unordered_map<int,int> mp;
+	
+	for(int i=0; i<n; i++)
+	{
+		curSum += arr[i];
+		
+		if(curSum == sum){
+			cout << "0 " << i << endl;
+			return;
+		}
+		
+		if(mp.find(curSum - sum) != mp.end())
+		{
+			cout << mp[curSum - sum] + 1 << " " << i << endl;
+			return;
+		}
+		
+		mp[curSum] = i;
+	}
+	cout << "No Subarray found";
+} 
+
+int main() {
+	
+	vector<int> arr{1, 4, 20, 3, 10, 5};
+	int sum = 33;
+	
+	findSubarraySum(arr, sum);
+	
+	return 0;
+}
