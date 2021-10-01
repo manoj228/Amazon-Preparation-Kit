@@ -1,0 +1,55 @@
+Input: arr[] = {1, 4, 20, 3, 10, 5}, sum = 33
+Output: Sum found between indexes 2 and 4
+Sum of elements between indices
+2 and 4 is 20 + 3 + 10 = 33
+
+Input: arr[] = {1, 4, 0, 0, 3, 10, 5}, sum = 7
+Output: Sum found between indexes 1 and 4
+Sum of elements between indices
+1 and 4 is 4 + 0 + 0 + 3 = 7
+
+Input: arr[] = {1, 4}, sum = 0
+Output: No subarray found
+There is no subarray with 0 sum
+
+
+
+// Time complexity : O(n) 
+// space complexity : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void findSubarraySum(vector<int> arr, int sum)
+{
+	int l = 0, r = 1, curSum = arr[0], n = arr.size(), flag = 0;
+	
+	while(1)
+	{
+		while(r < n && curSum < sum)
+		curSum += arr[r++];
+		
+		if(curSum == sum){
+			break;
+		}
+		
+		while(l < n && curSum > sum)
+		curSum -= arr[l++];
+	}
+	if(l == r){ cout << "No subarray found";
+	return;
+	}
+	
+	cout << l << " " << r-1 << endl;
+	
+} 
+
+int main() {
+	
+	vector<int> arr{1, 4, 20, 3, 10, 5};
+	int sum = 33;
+	
+	findSubarraySum(arr, sum);
+	
+	return 0;
+}
