@@ -1,0 +1,53 @@
+Example 1:
+
+Input: s = "barfoothefoobarman", words = ["foo","bar"]
+Output: [0,9]
+Explanation: Substrings starting at index 0 and 9 are "barfoo" and "foobar" respectively.
+The output order does not matter, returning [9,0] is fine too.
+Example 2:
+
+Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+Output: []
+Example 3:
+
+Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+Output: [6,9,12]
+
+
+
+// Time complexity : O(n*n)
+// Space complexity : O(n + n)
+
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> res;
+        
+        unordered_map<string, int> counts;
+        for(auto word : words) counts[word]++;
+        
+        int n = s.size(), wordsLen = words.size(), eachLen = words[0].size();
+        
+        for(int i=0; i <= n - wordsLen * eachLen; i++)
+        {
+            unordered_map<string, int> seen;
+            int j = 0;
+            for(; j<wordsLen; j++)
+            {
+                string curSubstring = s.substr(i+j*eachLen, eachLen);
+                
+                if(counts.find(curSubstring) == counts.end())
+                    break;
+                else if(counts.find(curSubstring) != counts.end()){
+                    seen[curSubstring]++;
+                    
+                    if(seen[curSubstring] > counts[curSubstring]) break;
+                }
+            }
+            
+            if(j == wordsLen) res.push_back(i);
+        }
+        
+        return res;
+    }
+};
