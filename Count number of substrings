@@ -19,10 +19,7 @@ The substrings are:
 
 
  
-class Solution
-{
-  public:
-    void removeInMap(unordered_map<char,int> &mp, char ch)
+ void removeInMap(unordered_map<char,int> &mp, char ch)
     {
         if(mp[ch] == 1) 
         mp.erase(ch);
@@ -33,45 +30,40 @@ class Solution
     
     long long int findCount(string s, int k)
     {
-        long long int i = 0, j = 0, res = 0, n = s.size();
+        long long int i = -1, j = -1, res = 0, n = s.size(), l = 5;
         unordered_map<char,int> mp;
         
         while(1)
         {
-            bool f1 = false, f2 = false;
+        	bool f1 = false, f2 = false;
            while(i < n-1)
-    	   {
-    	       f1 = true;
-    	       char ch = s[i];
-    	       mp[ch]++;
-    	       
-    	       if(mp.size() == 2)
-    	       {
-    	           removeInMap(mp, ch);
-    	           --i;
-    	           break;
-    	       }
-    	       
-    	       ++i;
-    	   }
-    	   
-    	   while(j < i)
-    	   {
-    	       f2 = true;
-    	       if(mp.size() == k)
-    	       {
-    	           res += i-j;
-    	       }
-    	       
-    	       char ch = s[j];
-    	       removeInMap(mp, ch);
-    	       
-    	       j++;
-    	       
-    	       if(mp.size() == 0) break;
-    	   }
-    	   
-    	   if(!f1 && !f2) break;
+           {
+           	f1 = true;
+           	mp[s[++i]]++;
+           	
+           	if(mp.size() == 2)
+           	{
+           		removeInMap(mp, s[i]);
+           		i--;
+           		break;
+           	}
+           }
+           
+           
+           while(j < i)
+           {
+           	  f2 = true;
+           	  
+           	  if(mp.size() == k) res += i-j;
+           	
+           	  removeInMap(mp, s[++j]);
+           	  
+           	  if(mp.size() == 0) break;
+           }
+           
+           
+           
+           if(!f1 && !f2) break;
         }
         
         return res;
@@ -79,12 +71,12 @@ class Solution
    
     long long int substrCount (string s, int k) {
         
-       // if(k == 1)
-       // return findCount(s, k);
+        if(k == 1)
+        return findCount(s, k);
     	
     	unordered_map<char,int> mpf, mpS;
     	
-    	long long int res = 0, left = 0, right = 0, j = 0, n = s.size();
+    	long long int res = 0, left = -1, right = -1, j = -1, n = s.size();
     	
     	while(1)
     	{
@@ -92,40 +84,37 @@ class Solution
     	   while(right < n-1)
     	   {
     	       f1 = true;
-    	       char ch = s[right];
-    	       mpf[ch]++;
+    	       mpf[s[++right]]++;
     	       
     	       if(mpf.size() == k+1)
     	       {
-    	           removeInMap(mpf, ch);
+    	           removeInMap(mpf, s[right]);
     	           --right;
     	           break;
     	       }
     	       
-    	       ++right;
     	   }
     	   
     	   
     	   while(left < right)
     	   {
     	       f2 = true;
-    	       char ch = s[left];
-    	       mpS[ch]++;
+    	       mpS[s[++left]]++;
     	       
     	       if(mpS.size() == k)
     	       {
-    	           removeInMap(mpS, ch);
+    	           removeInMap(mpS, s[left]);
     	           --left;
     	           break;
     	       }
     	       
-    	       ++left;
     	   }
     	   
     	   
     	   while(j < left)
     	   {
     	       f3 = true;
+    	       ++j;
     	       if(mpf.size() == k && mpS.size() == k-1)
     	       {
     	           res += right - left;
@@ -140,15 +129,12 @@ class Solution
     	           break;
     	       }
     	       
-    	       j++;
     	   }
     	   
     	   if(!f1 && !f2 && !f3) break;
-    	   
     	   
     	}
     	
     	
     	return res;
     }
-};
