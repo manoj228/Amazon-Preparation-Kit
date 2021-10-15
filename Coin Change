@@ -1,0 +1,61 @@
+Example 1:
+
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+Example 2:
+
+Input: coins = [2], amount = 3
+Output: -1
+Example 3:
+
+Input: coins = [1], amount = 0
+Output: 0
+Example 4:
+
+Input: coins = [1], amount = 1
+Output: 1
+Example 5:
+
+Input: coins = [1], amount = 2
+Output: 2
+
+
+
+// Time complexity : O(amount * n)
+// Space complexity : O(n * amount)
+
+class Solution {
+public:
+    int findMinimumCoins(vector<int> &coins, int idx, int n, int amount,                                        vector<vector<int>>& dp)
+    {
+        if(amount == 0) return 1;
+        
+        if(idx >= n || amount < 0) return INT_MAX-1;
+        
+        if(dp[idx][amount] != -1) return dp[idx][amount];
+        
+        if(coins[idx] <= amount)
+        {
+        // pick element
+        int pick = 1 + findMinimumCoins(coins, idx, n, amount - coins[idx], dp);
+            
+        // not pick element
+        int notPick = findMinimumCoins(coins, idx+1, n, amount, dp);
+        
+        return dp[idx][amount] = min(pick, notPick);        
+        }
+        
+        else
+            return dp[idx][amount] = findMinimumCoins(coins, idx+1, n, amount, dp);
+    }
+    
+    int coinChange(vector<int>& coins, int amount) {
+        int n = coins.size();
+        vector<vector<int>> dp(n+1, vector<int>(amount+1, -1));
+        
+        int res = findMinimumCoins(coins, 0, n, amount, dp);
+        
+        return res != INT_MAX-1 ? res-1: -1;
+    }
+};
