@@ -1,0 +1,46 @@
+Example 1:
+
+Input:
+N = 6
+arr[] = {3, 34, 4, 12, 5, 2}
+sum = 9
+Output: 1 
+Explanation: Here there exists a subset with
+sum = 9, 4+3+2 = 9.
+Example 2:
+
+Input:
+N = 6
+arr[] = {3, 34, 4, 12, 5, 2}
+sum = 30
+Output: 0 
+Explanation: There is no subset with sum 30.
+
+// Time complexity : O(sum * N)
+// space complexity : O(sum * N)
+class Solution{   
+public:
+    bool checkSubset(int arr[], int idx, int n, vector<vector<int>>& dp, int sum)
+    {
+        if(sum == 0) return true;
+        
+        if(idx == n) return false;
+       
+        if(dp[idx][sum] != -1) return dp[idx][sum];
+        
+        // picks the element
+        bool pick = checkSubset(arr, idx+1, n, dp, sum - arr[idx]);
+        
+        // not picks the element
+        bool notPick = checkSubset(arr, idx+1, n, dp, sum);
+        
+        return dp[idx][sum] = pick || notPick;
+    }
+
+    bool isSubsetSum(int N, int arr[], int sum){
+        
+        vector<vector<int>> dp(N+1, vector<int>(sum+1, -1));
+        
+        return checkSubset(arr, 0, N, dp, sum);
+    }
+};
