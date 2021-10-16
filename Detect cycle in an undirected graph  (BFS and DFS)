@@ -1,0 +1,90 @@
+Given an undirected graph with V vertices and E edges, check whether it contains any cycle or not. 
+
+1) DFS
+
+// Time complexity : O(V+E)
+// space complexity : O(V)
+class Solution {
+  public:
+    bool checkCycle(int u, int parent, vector<int> adj[], vector<bool> &vis)
+    {
+        vis[u] = parent;
+        
+        for(auto v : adj[u])
+        {
+            if(!vis[v])
+            {
+                if(checkCycle(v, u, adj, vis)) return true;
+            }
+            
+            else if(v != parent)
+            return true;
+        }
+        
+        return false;
+    }
+  
+    bool isCycle(int V, vector<int> adj[]) {
+        vector<bool> vis(V, false);
+        
+        for(int i=0; i<V; i++)
+        {
+            if(!vis[i] && checkCycle(i, -1, adj, vis))
+            return true;    
+            
+        }
+        
+        return false;
+    }
+};
+
+
+2) BFS
+
+// Time complexity : O(V+E)
+// space complexity : O(V)
+class Solution {
+  public:
+    bool checkCycle(int u, int V , vector<int> adj[], vector<bool> &vis)
+    {
+        queue<pair<int,int>> todo;
+        
+        todo.push({u,-1});
+        vis[u] = true;
+        
+        while(!todo.empty())
+        {
+            auto curNode = todo.front().first; 
+            auto parent = todo.front().second;
+            todo.pop();
+            
+            for(auto v : adj[curNode])
+            {
+                if(!vis[v])
+                {
+                    vis[v] = true;
+                    todo.push({v, curNode});
+                }
+                
+                else if(v != parent) 
+                return true;
+            }
+        }
+        
+        return false;
+    }
+  
+    bool isCycle(int V, vector<int> adj[]) {
+        
+        vector<bool> vis(V, false);
+        for(int i=0; i<V; i++)
+        {
+            if(!vis[i])
+            {
+                if(checkCycle(i, V, adj, vis)) return true;
+            }
+            
+        }
+        return false;
+    }
+};
