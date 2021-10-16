@@ -1,0 +1,96 @@
+Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge u v, vertex u comes before v in the ordering.
+Topological Sorting for a graph is not possible if the graph is not a DAG.
+
+For example, a topological sorting of the following graph is “5 4 2 3 1 0”. There can be more than one topological sorting for a graph. 
+For example, another topological sorting of the following graph is “4 5 2 3 1 0”. 
+The first vertex in topological sorting is always a vertex with in-degree as 0 (a vertex with no incoming edges).
+
+1) DFS
+
+
+// Time complexity : O(V + E)
+// Space complexity : O(V)
+class Solution
+{
+	public:
+	void dfs(int cur, vector<int> adj[], vector<bool>& vis, stack<int>& st)
+	{
+	    // mark cur as visited
+	    vis[cur] = true;
+	    
+	    // traverse its adjacent
+	    for(auto v : adj[cur])
+	    {
+	        if(!vis[v])
+	        dfs(v, adj, vis, st);
+	    }
+	    
+	    // once recursion is over, kindly push into stack
+	    st.push(cur);
+	}
+	
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    stack<int> st;
+	    vector<bool> vis(V, false);
+	    
+	    for(int i=0; i<V; i++)
+	    {
+	        if(!vis[i])
+	        dfs(i, adj, vis, st);
+	    }
+	    
+	    vector<int> topo;
+	    while(!st.empty())
+	    {
+	        topo.push_back(st.top());
+	        st.pop();
+	    }
+	    
+	    return topo;
+	}
+};
+
+
+2) BFS (kahn's algorithm)
+// Time complexity : O(V + E)
+// Space complexity : O(V)
+class Solution
+{
+	public:
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	   vector<int> indegree(V, 0);
+	   
+	   for(int i=0; i<V; i++)
+	   {
+	       for(auto v : adj[i])
+	       indegree[v]++;
+	   }
+	   
+	   queue<int> todo;
+	   for(int i=0; i<V; i++)
+	   {
+	       if(indegree[i] == 0)
+	       todo.push(i);
+	   }
+	   
+	   vector<int> topo;
+	   while(!todo.empty())
+	   {
+	       int u = todo.front(); todo.pop();
+	       
+	       topo.push_back(u);
+	       
+	       for(auto v : adj[u])
+	       {
+	           indegree[v]--;
+	           
+	           if(indegree[v] == 0)
+	           todo.push(v);
+	       }
+	   }
+	    
+	    return topo;
+	}
+};
