@@ -52,56 +52,44 @@ int main() {
 
 2) Optimal solution 
 
-// Time complexity : O(n log n)
-// space complexity : O(n)
-
-#include <bits/stdc++.h>
-using namespace std;
-
-int findPos(vector<int> arr, int len, int target)
-{
-	int l = 0, r = len-1;
-	
-	while(l < r)
-	{
-		int mid = (l+r) >> 1;
-		
-		if(arr[mid] < target)
-		l = mid+1;
-		
-		else
-		r = mid;
-	}
-	
-	return l;
-}
-
-int longestSubsequence(int n, vector<int> arr){
-   
-   vector<int> seq(n);
-   seq[0] = arr[0];
-   int len = 1;
-   
-   for(int i=1; i<n; i++)
-   {
-   	if(seq[len-1] < arr[i])
-   	{
-   		seq[len++] = arr[i];
-   	}
-   	else{
-   		// find position to place the cur element using binary search
-   		int index = findPos(arr, len, arr[i]);
-   		seq[index] = arr[i];
-   	}
-   }
-   
-   return len;
-}
-
-int main() {
-	// your code goes here
-	vector<int> arr {3, 10, 2, 1, 20};
-	
-   cout << longestSubsequence(arr.size(), arr);
-	return 0;
-}
+// Time complexity : O(nlogn)
+// Space complexity : O(n)
+class Solution {
+public:
+    int findLowerBound(vector<int> &res, int left, int right, int num)
+    {
+        while(left < right)
+        {
+            int mid = (left + right) >> 1;
+            
+            // if num is smaller, then we need to check
+            // if any more values are less in left
+            if(num <= res[mid])
+                right = mid;
+            
+            else
+                left = mid+1;
+        }
+        
+        return left;
+    }
+    
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> res;
+        
+        for(int i=0; i<nums.size(); i++)
+        {
+            // if res empty or last element less than cur element
+            if(res.empty() || res.back() < nums[i])
+            {
+                res.push_back(nums[i]);
+            }
+            else{
+                int index = findLowerBound(res, 0, res.size(), nums[i]);
+                res[index] = nums[i];
+            }
+        }
+        
+        return res.size();
+    }
+};
