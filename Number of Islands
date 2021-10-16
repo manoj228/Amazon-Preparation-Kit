@@ -1,0 +1,76 @@
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+Example 2:
+
+Input: grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+Output: 3
+ 
+
+
+// time complexity : O(m * n)
+// space complexity : O(m * n)
+
+class Solution {
+public:
+    void islandToWater(int i, int j, vector<vector<int>> &vis)
+    {
+        if(i < 0 || j < 0 || i >= vis.size() || j >= vis[0].size() || vis[i][j]=='0')              
+        return;
+        
+        vis[i][j] = '0';
+        
+        islandToWater(i+1, j, vis);
+        islandToWater(i-1, j, vis);
+        islandToWater(i, j+1, vis);
+        islandToWater(i, j-1, vis);
+        
+    } 
+    
+    int numIslands(vector<vector<char>>& grid) {
+        
+        int m = grid.size(), n = grid[0].size();
+        
+        int islandCount = 0;
+        
+        // take copy of input, don't make changes in input
+        vector<vector<int>> vis(m, vector<int>(n));
+        for(int i=0; i<m; i++)
+        {
+            for(int j=0; j<n; j++)
+            {
+                vis[i][j] = grid[i][j];
+            }
+        }
+        
+        
+        for(int i=0; i<m; i++)
+        {
+            for(int j=0; j<n; j++)
+            {
+                if(vis[i][j] == '1')
+                {
+                    islandCount++;
+                
+                    islandToWater(i, j, vis);
+                }
+                
+            }
+        }
+        
+        
+        return islandCount;
+    }
+};
+ 
