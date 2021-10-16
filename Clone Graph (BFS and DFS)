@@ -1,0 +1,85 @@
+Example 1:
+Input: adjList = [[2,4],[1,3],[2,4],[1,3]]
+Output: [[2,4],[1,3],[2,4],[1,3]]
+Explanation: There are 4 nodes in the graph.
+1st node (val = 1)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+2nd node (val = 2)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+3rd node (val = 3)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+4th node (val = 4)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+
+
+
+1) BFS
+
+// Time complexity : O(n)
+// space complexity : O(n)
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if(!node) return NULL;
+        
+        unordered_map<Node*, Node*> tracker;  
+        
+        // making copy of original node
+        // tracker[original] = node
+        Node* clone = new Node(node->val);
+        tracker[node] = clone;
+        
+        queue<Node *> todo;
+        todo.push(node);
+        
+        while(!todo.empty())
+        {
+            Node* curNode = todo.front(); todo.pop();
+            
+            // traversing its adjacent
+            for(auto adj : curNode -> neighbors)
+            {
+                // if val not found means, we need to create copy and insert into queue
+                if(tracker.find(adj) == tracker.end())
+                {
+                    // insert into queue
+                    todo.push(adj);
+                    // creating copy
+                    tracker[adj] = new Node(adj->val);   
+                }
+                
+                // update copy for curNode adjacent elements
+                tracker[curNode] -> neighbors.push_back(tracker[adj]);               
+            }
+        }
+    
+        return clone;
+    }
+};
+
+2) DFS
+
+// Time complexity : O(n)
+// Space complexity : O(n)
+class Solution {
+public:
+    
+    Node *dfs(Node *node, unordered_map<Node*, Node*> &mp)
+    {
+        if(!node) return NULL;
+        
+        if(mp.find(node) == mp.end())
+        {
+            mp[node] = new Node(node -> val);
+            
+            for(auto adj : node -> neighbors)
+            mp[node] -> neighbors.push_back(dfs(adj, mp));
+        }
+            
+            
+        return mp[node];
+    }
+    
+    Node* cloneGraph(Node* node) {
+        unordered_map<Node*, Node*> mp;
+        
+        return dfs(node, mp);
+    }
+};
