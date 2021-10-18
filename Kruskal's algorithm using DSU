@@ -1,0 +1,120 @@
+
+// Time complexity : O(4 * alpha) where alpha denotes very small value
+// Space complexity : O(N + N) = O(N)
+
+/*
+Kruskal's Algorithm
+1) Sort all the edges based on weight
+2) check parent for u and v ,  
+   if both belongs to different component, then update cost and do union
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class DSU{
+	public:
+	vector<int> parent, size;
+	public :
+	DSU(int n)
+	{
+		// initialize all inputs
+		for(int i=0; i<=n; i++)
+		{
+			parent.push_back(i);
+			size.push_back(1);
+		}
+	}
+	
+	public :
+	int findParent(int node)
+	{
+		if(node == parent[node]) return node;
+		
+		return parent[node] = findParent(parent[node]);
+	}
+	
+	public : 
+	void unionSize(int u, int v)
+	{
+		u = findParent(u);
+		v = findParent(v);
+		
+		if(u == v) return;
+		
+		if(size[u] < size[v])
+		{
+			parent[u] = v;
+			size[v] += size[u];
+		}
+		else 
+		{
+			parent[v] = u;
+			size[u] += size[v];
+		}
+	}
+};
+
+struct node
+{
+	int u, v, wt;
+	node(int _u, int _v, int _wt)
+	{
+		u = _u;
+		v = _v;
+		wt = _wt;
+	}
+};
+
+bool myCmp(node a, node b)
+{
+	return a.wt < b.wt;
+}
+
+int main() {
+	int V, E;
+	cin >> V >> E;
+	
+	vector<node> edges;
+	for(int i=0; i<E; i++)
+	{
+		int u, v, wt;
+		cin >> u >> v >> wt;
+		
+		edges.push_back(node(u, v, wt));
+	}
+	// 1) sort all edges based on weight
+	sort(edges.begin(), edges.end(), myCmp);
+	
+	DSU dsu(V);
+	
+	
+	int minCost = 0;
+	vector<pair<int,int>> mst;
+	for(auto edge : edges)
+	{
+		int u = edge.u, v = edge.v, wt = edge.wt;
+		if(dsu.findParent(u) != dsu.findParent(v))
+		{
+			dsu.unionSize(u, v);
+			minCost += wt;
+			mst.push_back({u, v});
+		}
+	}
+	
+	cout << minCost << endl;
+	for(auto e : mst)
+	{
+		cout << e.first << " " << e.second << endl;
+	}
+	
+	return 0;
+}
+
+/*
+Following are the edges in the constructed MST
+2 -- 3 == 4
+0 -- 3 == 5
+0 -- 1 == 10
+Minimum Cost Spanning Tree: 19
+*/
