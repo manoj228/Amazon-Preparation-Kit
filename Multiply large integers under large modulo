@@ -1,0 +1,55 @@
+Examples: 
+
+Input: a = 426, b = 964, m = 235
+Output: 119
+Explanation: (426 * 964) % 235  
+            = 410664 % 235
+            = 119
+
+Input: a = 10123465234878998, 
+       b = 65746311545646431
+       m = 10005412336548794 
+Output: 4652135769797794
+
+
+// Time complexity : O(log(b))
+// Space complexity : O(1)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+If b is even, a * b = a * (b / 2) * 2  => 2 * a * (b / 2)
+If b is odd,  a * b = a * (b - 1) + a  => a + a * (b - 1)
+*/
+
+long long moduloMultiplication(long long a, long long b, long long m)
+{
+	long long res = 0;
+	
+	// to prevent overflow
+	a %= m;
+	
+	while(b)
+	{
+		// if b is odd, we need a one time
+		if(b & 1) res = (res + a) % m;
+		
+		a = (a * 2) % m;
+		
+		b >>= 1; // b /= 2
+	}
+	
+	return res;
+}
+
+int main() {
+	
+	long long a = 426;
+    long long b = 964;
+    long long m = 235;
+    
+    cout << moduloMultiplication(a, b, m);
+	
+	return 0;
+}
