@@ -1,0 +1,178 @@
+eg. 1-2-3-4-5-6-7-8
+   1
+  2  3  
+ 7  6 5  4
+ 
+ Executed output:
+1 2 3 4 5 6 7 
+7 6 5 4 3 2 1 
+1 
+2 3 
+7 6 5 4 
+
+Inorder : 7 2 6 1 5 3 4 
+ 
+ #include <bits/stdc++.h>
+using namespace std;
+
+struct DLL
+{
+	int data;
+	DLL *next , *prev;
+	
+	DLL(int _data)
+	{
+		data = _data;
+		next = prev = NULL;
+	}
+};
+
+struct Node
+{
+	int data;
+	Node *left, *right;
+	
+	Node(int _data)
+	{
+		data = _data;
+		left = right = NULL;
+	}
+};
+
+void print(DLL *head, DLL *tail)
+{
+	while(head)
+	{
+		cout << head -> data << " ";
+		head = head -> next;
+	}
+	
+	cout << endl;
+	
+	while(tail)
+	{
+		cout << tail -> data << " ";
+		tail = tail -> prev;
+	}
+	
+	cout << endl;
+}
+
+
+Node* insertTreeNode(Node *root, int data)
+{
+	if(!root) return new Node(data);
+	
+	queue<Node*> q;
+	q.push(root);
+	
+	while(!q.empty())
+	{
+		auto temp = q.front();
+		q.pop();
+		
+		if(temp -> left) q.push(temp->left);
+		else {
+			temp -> left = new Node(data);
+			return root;
+		}
+		
+		if(temp -> right) q.push(temp->right);
+		else{
+			 temp -> right = new Node(data);
+			 return root;
+		}
+	}
+	
+}
+
+Node *convertToBT(DLL *head, DLL *tail)
+{
+	print(head, tail);
+	
+	Node *root = NULL;
+	
+	int k = 1;
+	bool leftToRight = true;
+	deque<int> dq;
+	
+	
+	while(head)
+	{
+		int size = (1 << k++);
+
+		while(size > 0 && head)
+		{
+			if(leftToRight && head)
+			{
+				dq.push_back(head->data);
+				
+				head = head -> next;
+			}
+			else{
+				dq.push_front(head->data);
+				
+				head = head -> next;
+			}
+			
+			size -= 2;
+		}
+		
+		
+		while(!dq.empty())
+		{
+			root = insertTreeNode(root, dq.back());
+			dq.pop_back();
+		}
+		
+
+		cout << endl;
+		leftToRight = !leftToRight;
+	}
+	
+	return root;
+}	
+
+void inorder(Node *root)
+{
+	if(!root) return;
+	
+	inorder(root -> left);
+	
+	cout << root -> data << " ";
+	
+	inorder(root -> right);
+}
+
+void insert(DLL **tail, int val)
+{
+	DLL *newNode = new DLL(val);
+	
+	(*tail) -> next = newNode;
+	newNode -> prev = (*tail);
+	
+	(*tail) = newNode;
+	(*tail) -> next = NULL;
+}
+
+
+int main() {
+	
+	DLL *head = new DLL(1);
+	head -> prev = NULL;
+	
+	DLL *tail = head;
+	insert(&tail, 2);
+	insert(&tail, 3);
+	insert(&tail, 4);
+	insert(&tail, 5);
+	insert(&tail, 6);
+    insert(&tail, 7);
+	
+	Node *root = convertToBT(head, tail);
+	
+	cout << "\nInorder : ";
+	inorder(root);
+	
+	return 0;
+}
