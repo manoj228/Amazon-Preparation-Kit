@@ -1,0 +1,66 @@
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values.
+(i.e., from left to right, then right to left for the next level and alternate between).
+
+ 
+Example 1:
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[20,9],[15,7]]
+
+Example 2:
+Input: root = [1]
+Output: [[1]]
+
+Example 3:
+Input: root = []
+Output: []
+
+
+
+// Time complexity : O(N)
+// Space complexity : O(N)
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        
+        vector<vector<int>> res;
+        if(!root) return res;
+        
+        bool leftToRight = true;
+        deque<TreeNode*> dq;
+        dq.push_back(root);
+        
+        while(!dq.empty())
+        {
+            int size = dq.size();
+            vector<int> temp;
+            while(size--)
+            {                
+                if(leftToRight)
+                {
+                    TreeNode *cur = dq.front(); dq.pop_front();
+                    
+                    temp.push_back(cur->val);
+                    
+                    if(cur -> left) dq.push_back(cur->left);
+                    if(cur -> right) dq.push_back(cur->right);
+                }
+                
+                else
+                {
+                    TreeNode *cur = dq.back(); dq.pop_back();
+                    
+                    temp.push_back(cur->val);
+                    
+                    if(cur -> right) dq.push_front(cur->right);
+                    if(cur -> left) dq.push_front(cur->left);
+                    
+                }
+            }
+            
+            leftToRight = !leftToRight;
+            res.push_back(temp);
+        }
+        
+        return res;
+    }
+};
