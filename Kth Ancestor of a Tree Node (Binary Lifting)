@@ -1,0 +1,55 @@
+Time complexity: O(log(max(K)) * N) 
+Space complexity : O(20*N)
+
+class TreeAncestor {
+public:
+    vector<vector<int>> nodeToParent; // nodeToParent[i][node] ->  node's  2^ith parent
+    TreeAncestor(int n, vector<int>& parent) {
+        
+        // 20 denotes 2^20 (we are storing 2^20th parents)
+        nodeToParent.resize(20, vector<int>(n, -1));
+        
+        // fill 2^0th parent
+        for(int i=0; i<parent.size(); i++)
+        {
+            nodeToParent[0][i] = parent[i];
+        }
+        
+        // fill 2^ith parent
+        for(int i=1; i<20; i++)
+        {
+            for(int node = 0; node < parent.size(); node++)
+            {
+                int curNodeParent = nodeToParent[i-1][node];  
+                                
+                // if its equal to -1, then it is root node
+                // so we need to find parent for other than root node
+                if(curNodeParent != -1) nodeToParent[i][node] = nodeToParent[i-1][curNodeParent]; // 2^ith parent
+            }
+        }
+        
+    }
+    
+    int getKthAncestor(int node, int k) {
+        
+        // 5 -   1   0   1
+        //     2^2 2^1 2^0
+        //  so we need to find kth value , first get 2^0 , then 2^2       
+        for(int i=0; i<20; i++)
+        {
+            if(k & (1 << i))
+            {
+                node = nodeToParent[i][node];
+                if(node == -1) return -1;
+            }
+        }
+        
+        return node;
+    }
+};
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * TreeAncestor* obj = new TreeAncestor(n, parent);
+ * int param_1 = obj->getKthAncestor(node,k);
+ */
