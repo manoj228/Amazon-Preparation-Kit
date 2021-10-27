@@ -1,10 +1,10 @@
 Example 1:
 k = 2
-			   4
-			/     \
-		 6          8
+	       4
+	  /       \
+	  6         8
 	 /     \
-   8          5
+       8          5
 
 The kth parent of 8 and 5 is 4 which is even and therefore the answer is 8+5=13 for this example.
 
